@@ -17,6 +17,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { userSigninRequest } from "@/api/user/user-api";
+import { userSigninGoogleRequest } from "@/api/user/user-api";
 import { useToast } from "@/hooks/use-toast";
 import { tokenCookie } from "@/utils/user-cache";
 import { useRouter } from "next/navigation";
@@ -44,8 +45,19 @@ const Auth = () => {
     password: "",
   });
 
-  const handleSuccess = (credentialResponse: any) => {
-    console.log(credentialResponse); // You can send this token to your backend for validation
+  const handleSuccess = async (credentialResponse: any) => {
+    console.log(credentialResponse?.credential);
+    const request = await userSigninGoogleRequest(credentialResponse);
+    if (!request?.error && request?.data?.success) {
+      await tokenCookie(request?.data?.token);
+      toast({
+        variant: "success",
+        title: "Sign in with google is successful",
+        description: "Redirecting to the dashboard.",
+        duration: 800,
+      });
+      router.push("/dashboard");
+    }
   };
 
   const handleError = () => {
@@ -162,17 +174,13 @@ const Auth = () => {
                       />
                     </div>
                     <hr></hr>
-                    <GoogleOAuthProvider
-                      clientId={
-                        "406218299171-qopbpjivcrm1ppo9rqdqocu30s8bfh37.apps.googleusercontent.com"
-                      }
-                    >
+                    <div className="mx-auto">
                       <GoogleLogin
                         onSuccess={handleSuccess}
                         onError={handleError}
                         useOneTap
                       />
-                    </GoogleOAuthProvider>
+                    </div>
                   </div>
                   <div className="text-sm mt-4">
                     Click here to{" "}

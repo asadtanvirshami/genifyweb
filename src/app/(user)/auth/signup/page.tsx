@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 const Auth = () => {
   return (
@@ -41,13 +42,27 @@ const Auth = () => {
                 <form>
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="fname">First Name</Label>
+                      <Input id="fname" placeholder="John" />
+                    </div>
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="lname">Last Name</Label>
+                      <Input id="lname" placeholder="Doe" />
+                    </div>
+                    <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="email">Email</Label>
                       <Input id="email" placeholder="example@gmail.com" />
                     </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="email">Password</Label>
-                      <Input id="email" placeholder="*********" />
+                      <Input id="password" placeholder="*********" />
                     </div>
+                  </div>
+                  <div className="text-sm mt-4">
+                    Already have an account?{" "}
+                    <Link href={"/auth/signin"} className="text-blue-500">
+                      Signin here.
+                    </Link>
                   </div>
                 </form>
               </CardContent>

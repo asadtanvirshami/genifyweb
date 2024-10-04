@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 
 const userSigninRequest = async (email: string, password: string) => {
   try {
@@ -6,19 +6,42 @@ const userSigninRequest = async (email: string, password: string) => {
       process.env.NEXT_PUBLIC_AUTH_USER_SIGNIN as string,
       { email, password }
     );
-    return response ;
+    return response;
   } catch (error) {
     // Check if the error is an AxiosError and type it accordingly
     if (axios.isAxiosError(error)) {
       // Now TypeScript recognizes that error.response is valid
-      console.error('Error Response:', error.response?.data);
+      console.error("Error Response:", error.response?.data);
       return error.response?.data; // Access the response property safely
     } else {
       // Handle unexpected errors
-      console.error('Unexpected Error:', error);
-      return { message: 'An unexpected error occurred' };
+      console.error("Unexpected Error:", error);
+      return { message: "An unexpected error occurred" };
     }
   }
 };
 
-export { userSigninRequest };
+const userSigninGoogleRequest = async (tokenResponse: any) => {
+  try {
+    const response = await axios.post(
+      process.env.NEXT_PUBLIC_AUTH_GOOGLE_SIGNIN as string,
+      {
+        token: tokenResponse.credential,
+      }
+    );
+    return response;
+  } catch (error) {
+    // Check if the error is an AxiosError and type it accordingly
+    if (axios.isAxiosError(error)) {
+      // Now TypeScript recognizes that error.response is valid
+      console.error("Error Response:", error.response?.data);
+      return error.response?.data; // Access the response property safely
+    } else {
+      // Handle unexpected errors
+      console.error("Unexpected Error:", error);
+      return { message: "An unexpected error occurred" };
+    }
+  }
+};
+
+export { userSigninRequest, userSigninGoogleRequest };
